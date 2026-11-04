@@ -39,7 +39,19 @@ const { groom, bride } = wedding.couple;
 
 const [first, second] = toWords([shape(groom.charAt(0)), shape(bride.charAt(0))]);
 const [and] = toWords([shape("and")]);
+const [ampersand] = toWords([shape("&")]);
 const [save, the, date] = toWords([shape("Save"), shape("the"), shape("Date")]);
 const [groomWord, amp, brideWord] = toWords([shape(groom), shape("&"), shape(bride)]);
 
-export const lettering: Lettering = { first, second, and, save, the, date, groom: groomWord, amp, bride: brideWord };
+export const lettering: Lettering = {
+  first,
+  second,
+  and,
+  ampersand,
+  save,
+  the,
+  date,
+  groom: groomWord,
+  amp,
+  bride: brideWord,
+};

@@ -52,18 +52,30 @@ export default function Image() {
           {groom.charAt(0)}
         </div>
         <div style={{ position: "relative", width: 300, height: 60, display: "flex", justifyContent: "center" }}>
+          {wedding.monogram.line ? (
+            <div
+              style={{
+                position: "absolute",
+                top: 32,
+                left: 0,
+                right: 0,
+                height: 1,
+                background: `linear-gradient(90deg, rgba(230,180,127,0), ${GOLD_LIGHT}, rgba(230,180,127,0))`,
+                display: "flex",
+              }}
+            />
+          ) : null}
           <div
             style={{
-              position: "absolute",
-              top: 32,
-              left: 0,
-              right: 0,
-              height: 1,
-              background: `linear-gradient(90deg, rgba(230,180,127,0), ${GOLD_LIGHT}, rgba(230,180,127,0))`,
+              fontFamily: "Ephesis",
+              fontSize: wedding.monogram.join === "&" ? 96 : 76,
+              lineHeight: 0.8,
+              color: GOLD,
               display: "flex",
             }}
-          />
-          <div style={{ fontFamily: "Ephesis", fontSize: 76, lineHeight: 0.8, color: GOLD, display: "flex" }}>and</div>
+          >
+            {wedding.monogram.join}
+          </div>
         </div>
         <div style={{ fontFamily: "Ephesis", fontSize: 190, lineHeight: 1.05, color: GOLD, display: "flex" }}>
           {bride.charAt(0)}
