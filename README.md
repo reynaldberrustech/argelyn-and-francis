@@ -13,15 +13,17 @@ Built with Next.js 16 (App Router), React 19, Tailwind CSS 4 and Motion. Ready t
 5. **Save the Date**: the date, time, church and reception, a live countdown whose numbers roll as they change, and calendar buttons (Google, Apple and Outlook).
 6. **Our Moments**: an auto-playing photo slideshow. It moves on every 5 seconds, pauses on hover or when scrolled away, and can be swiped or paused.
 7. **Our Day**: the schedule, from arriving at the church to the last dance, with the place for each part.
-8. **The Venues**: the church and the hotel, each with directions, one map that switches between them, and a tap-to-explore plan of the reception hall.
+8. **The Venues**: the church and the hotel, each with "Get directions" and "Open in Google Maps" buttons, and a tap-to-explore plan of the reception hall.
 9. **Our Prenup**: a photo gallery. Tap a photo to see it full screen; swipe or use the arrow keys to move between them.
-10. **Attire**: a lookbook with photos of models in each look (bridesmaids, groomsmen, sponsors and guests), the color palette, and what guests can wear.
+10. **Attire**: a lookbook with auto-sliding carousels of sample photos for every look (bridesmaids and groomsmen, sponsors, and guests in midnight blue and in champagne), what each role wears, and the two suggested colors.
 11. **Entourage**: parents, sponsors, best man and maid of honor, groomsmen, bridesmaids and the little ones.
 12. **Details**: a note on gifts and common questions.
 13. **Kindly Reply**: a reply card that saves answers to a Google Sheet. Guests who are coming can also say who's coming with them and note any food allergies or diet needs.
 14. **Thank you**: a note, a photo and the couple's sign-off, with the hashtag. Below it, a small **Couple login** link opens your private guest list (see [Your guest list](#your-guest-list-for-the-two-of-you)).
 
 For guests who turn on "reduce motion" on their phone, the slideshow doesn't auto-play, petals don't fall, and everything appears without animation.
+
+Every animation only moves and fades things (no blurs, no animated sizes), so the phone's graphics chip does the work and scrolling stays smooth. Photos drift gently as you scroll in Chrome, Edge and on Android; Safari and Firefox show them still. If you add an animation, keep to `opacity`, `transform`, `translate` and `scale` so the page stays smooth.
 
 ## Your prenup photos
 
@@ -50,7 +52,7 @@ Everything guests read is in **`src/content/wedding.ts`**. Before you share the 
 
 - [ ] Replace the placeholder names in `entourage` (for example "Ninong's name" and "Groomsman's name"). Add or remove lines to match your entourage.
 - [ ] Check the times in `schedule`, plus `startsAt` and `endsAt` (Philippine time, `+08:00`).
-- [ ] Set `mapsQuery` for both places in `venues` to their exact coordinates. Google Maps finds neither the church (listed by the diocese as Santo Niño Parish) nor "Malangas Budget Hotel" by name, so both maps point at the town of Malangas for now. In Google Maps, right-click the building, click the coordinates to copy them, and paste them in as `"7.xxxxx,123.xxxxx"`.
+- [ ] Set `mapsQuery` for both places in `venues` to their exact coordinates. Google Maps finds neither the church (listed by the diocese as Santo Niño Parish) nor "Malangas Budget Hotel" by name, so both sets of directions point at the town of Malangas for now. In Google Maps, right-click the building, click the coordinates to copy them, and paste them in as `"7.xxxxx,123.xxxxx"`.
 - [ ] Check `rsvp.deadline`, `hashtag`, `gifts` and `faqs`.
 
 The reception hall plan in the Venues section follows the moodboard layout: stage, aisle, family tables, guest tables, buffet, photo booth and entrance. Edit `src/components/HallPlan.tsx` if the real room is different.
@@ -261,7 +263,20 @@ Keep it under about 5 MB (128 kbps is plenty) so it starts quickly on mobile dat
 
 ## Attire photos
 
-The lookbook photos in `public/attire/` were cut from your dress code design. To change a look, replace its photo (any portrait image on a plain light background works best) and update its `width`, `height`, `alt` and description under `attire` in `src/content/wedding.ts`. A higher-resolution version of the design would make the models sharper.
+Every look in the lookbook is shown in an auto-sliding carousel of sample photos, all in the same tall arched frame:
+
+- **Entourage**: bridesmaids in midnight blue gowns and groomsmen in light gray suits, taking turns.
+- **Principal sponsors**: ladies in champagne or nude gowns and gents in navy suits or tuxedos with a bow tie, taking turns.
+- **Guests**: one carousel of looks in midnight blue and one in champagne.
+
+The photos in `public/attire/` are free photos from [Unsplash](https://unsplash.com/license) by Asdrubal luna, Alexander Mass, Gabriel Ogulu, Luigi Estuye (LUCREATIVE), Leila de Haan, Hardini Lestari, Andres Molina, Marius Muresan, Mihaela Claudia Puscas, Alfonso Scarpa, sammy swae, Dmitry Rodionov, lhon karwan, Golf Modz, iKshana Productions, KASONGO BULOBO, Debabrata Ghosh, Samson Balogun, Alexis Maxell, gabbiistudios, ALIREZA Pandkhahi, Teodora Popa and MOHAMMAD AL JANNAT RAKIN.
+
+To change or add a look, put the photo in `public/attire/` and add it in `src/content/wedding.ts`:
+
+- Entourage and sponsors: under that role's `looks` in `attire.entourage` or `attire.sponsors` (each role also has the `description` shown above its carousel).
+- Guests: under `attire.guests.midnightBlue` or `attire.guests.champagne`.
+
+Give each photo its `width`, `height`, `alt` and a short `caption`. Full-length portrait photos about 1200 pixels wide work best. If the person stands off-centre, add `focus` (for example `"30% 50%"`) to move the crop. Photos of your actual entourage in their outfits would be even better once you have them.
 
 ## Where things live
 
@@ -285,7 +300,8 @@ The lookbook photos in `public/attire/` were cut from your dress code design. To
 | `public/attire/` | The lookbook photos of each look |
 | `public/audio/` | The background music |
 | `src/components/Attire.tsx` | The dress code lookbook |
-| `src/components/Venue.tsx` | The church and reception cards, with `VenueMap.tsx` for the map |
+| `src/components/LookCarousel.tsx` | The auto-sliding carousel of looks in the lookbook |
+| `src/components/Venue.tsx` | The church and reception cards, with directions |
 | `public/prenup/` | The prenup photos |
 | `public/textures/lace.webp` | The embroidered lace on the envelope |
 | `src/assets/fonts/` | Font files for the lettering and the preview image |

@@ -54,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${script.variable} ${serif.variable} is-sealed`} suppressHydrationWarning>
       <body>
         <noscript>
-          <style>{`html.is-sealed{overflow:auto}.gate{display:none!important}`}</style>
+          <style>{`html.is-sealed{overflow:auto}.gate{display:none!important}.reveal,.reveal-photo{opacity:1!important;translate:none!important;clip-path:none!important}`}</style>
         </noscript>
         {children}
       </body>

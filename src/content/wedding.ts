@@ -4,7 +4,7 @@
  * Before sharing the link:
  *  1. Replace every name marked with a role (e.g. "Ninong's name") in `entourage`.
  *  2. Check the times in `schedule` and `startsAt` / `endsAt`.
- *  3. Check each `mapsQuery` in `venues` points the map at the right building.
+ *  3. Check each `mapsQuery` in `venues` points the directions at the right building.
  *  4. Put your own prenup photos in /public/prenup and list them in `photos`.
  */
 
@@ -25,7 +25,7 @@ export type Venue = {
   town: string;
   time: string;
   detail: string;
-  /** What the map and "Get directions" point to: a place name, or exact coordinates like "7.12345,123.12345". */
+  /** What "Get directions" and "Open in Google Maps" point to: a place name, or exact coordinates like "7.12345,123.12345". */
   mapsQuery: string;
 };
 
@@ -39,7 +39,16 @@ export type RoleGroup = { role: string; meaning: string; names: string[] };
 export type Look = {
   role: string;
   description: string;
-  photo: { src: string; width: number; height: number; alt: string };
+  /** Sample photos of this look, shown in the attire carousels */
+  looks: GuestLook[];
+};
+
+/** A guest look in the attire carousels. Photos live in /public/attire. */
+export type GuestLook = {
+  caption: string;
+  /** Shown above the caption, e.g. "Bridesmaids" */
+  role?: string;
+  photo: { src: string; width: number; height: number; alt: string; focus?: string };
 };
 
 /**
@@ -112,7 +121,7 @@ export const wedding = {
     "Thank you for being part of our journey. Your love and support mean the world to us. We can't wait to celebrate this new beginning with you.",
 
   // The wedding is at the church, then everyone goes on to the hotel for the reception.
-  // For each map, the safest `mapsQuery` is the building's exact coordinates, e.g. "7.12345,123.12345"
+  // For directions, the safest `mapsQuery` is the building's exact coordinates, e.g. "7.12345,123.12345"
   // (in Google Maps, right-click the building and click the numbers to copy them).
   venues: {
     ceremony: {
@@ -235,69 +244,285 @@ export const wedding = {
 
   // The dress code, with photos of models in each look (in /public/attire).
   attire: {
+    // The two colors guests are asked to wear. White is for the bride only.
+    // Shown like satin swatches, with light catching one side, so the blue reads as blue and not black.
     palette: [
-      { name: "Midnight blue", swatch: "#111D2D" },
-      { name: "Champagne", swatch: "#D2B79A" },
-      { name: "White", swatch: "#FFFFFF" },
-      { name: "Gold accents", swatch: "linear-gradient(135deg, #FECD81, #DEAD60 55%, #B98835)" },
+      {
+        name: "Midnight blue",
+        swatch: "radial-gradient(circle at 32% 28%, #5a72c4 0%, #2a438f 34%, #1a2c66 68%, #111f4c 100%)",
+      },
+      {
+        name: "Champagne",
+        swatch: "radial-gradient(circle at 32% 28%, #fbf0e1 0%, #e6cfb1 38%, #d2b48f 72%, #b8966f 100%)",
+      },
     ],
+    // Sample photos for each role, shown in a carousel that alternates between the two roles.
+    // Photos from Unsplash, free to use: Asdrubal luna, Alexander Mass, Gabriel Ogulu, Luigi Estuye (LUCREATIVE),
+    // Leila de Haan, Hardini Lestari, Andres Molina, Marius Muresan, Mihaela Claudia Puscas, Alfonso Scarpa,
+    // sammy swae and Dmitry Rodionov.
     entourage: [
       {
         role: "Bridesmaids",
         description: "Elegant floor-length gowns in midnight blue, with simple, classic designs.",
-        photo: {
-          src: "/attire/bridesmaids.png",
-          width: 492,
-          height: 596,
-          alt: "Four bridesmaids in floor-length midnight blue satin gowns, holding white rose bouquets",
-        },
+        looks: [
+          {
+            caption: "Navy gown and bouquet",
+            photo: {
+              src: "/attire/bridesmaid-navy-bouquet.jpg",
+              width: 1200,
+              height: 1800,
+              alt: "A bridesmaid in a floor-length navy gown holding a white bouquet",
+            },
+          },
+          {
+            caption: "Navy sequined gown",
+            photo: {
+              src: "/attire/bridesmaid-navy-sequin.jpg",
+              width: 1200,
+              height: 1500,
+              alt: "A woman in a floor-length navy sequined gown, seen from behind",
+            },
+          },
+          {
+            caption: "Navy tulle gown",
+            photo: {
+              src: "/attire/bridesmaid-navy-tulle.jpg",
+              width: 1200,
+              height: 1795,
+              alt: "A woman in a full navy tulle gown walking through a meadow",
+            },
+          },
+        ],
       },
       {
         role: "Groomsmen",
         description: "Light gray suits with navy blue ties and white boutonnières.",
-        photo: {
-          src: "/attire/groomsmen.png",
-          width: 468,
-          height: 596,
-          alt: "Four groomsmen in light gray suits with navy blue ties and white boutonnières",
-        },
+        looks: [
+          {
+            caption: "Light gray suit and tie",
+            photo: {
+              src: "/attire/groomsman-gray-tie.jpg",
+              width: 1200,
+              height: 1800,
+              alt: "A man in a light gray suit straightening his tie in a garden",
+            },
+          },
+          {
+            caption: "Light gray suit",
+            photo: {
+              src: "/attire/groomsman-gray-suit.jpg",
+              width: 1200,
+              height: 1800,
+              alt: "A man in a light gray suit walking past a black door",
+            },
+          },
+          {
+            caption: "Navy tie and pocket square",
+            photo: {
+              src: "/attire/groomsman-gray-detail.jpg",
+              width: 960,
+              height: 1600,
+              alt: "Close-up of a light gray suit with a navy striped tie and a navy pocket square",
+            },
+          },
+        ],
       },
     ] satisfies Look[],
     sponsors: [
       {
         role: "Maid of honor & secondary sponsors (ladies)",
         description: "Champagne or nude formal gowns: elegant, simple and coordinated.",
-        photo: {
-          src: "/attire/sponsors-ladies.png",
-          width: 392,
-          height: 596,
-          alt: "A woman in a champagne one-shoulder gown beside a man in a navy blue tuxedo",
-        },
+        looks: [
+          {
+            caption: "Champagne gowns",
+            photo: {
+              src: "/attire/sponsor-champagne-gowns.jpg",
+              width: 1200,
+              height: 2133,
+              alt: "Women in champagne gowns gathered around the bride and her bouquet",
+            },
+          },
+          {
+            caption: "Champagne gown",
+            photo: {
+              src: "/attire/sponsor-champagne-gown.jpg",
+              width: 1200,
+              height: 2011,
+              alt: "A woman in a fitted champagne gown with gold embroidery",
+            },
+          },
+          {
+            caption: "Nude strapless gown",
+            photo: {
+              src: "/attire/sponsor-tan-gown.jpg",
+              width: 1200,
+              height: 1800,
+              alt: "A woman in a nude strapless gown standing by a fireplace",
+            },
+          },
+        ],
       },
       {
         role: "Best man & secondary sponsors (gents)",
-        description: "Navy blue suits or tuxedos with champagne or white accents, and a bow tie or necktie.",
-        photo: {
-          src: "/attire/sponsors-gents.png",
-          width: 392,
-          height: 596,
-          alt: "A man in a navy blue tuxedo with a bow tie beside a woman in a champagne gown",
-        },
+        description: "Navy blue suits or tuxedos with champagne accents, and a bow tie or necktie.",
+        looks: [
+          {
+            caption: "Navy suit and bow tie",
+            photo: {
+              src: "/attire/sponsor-navy-bow-tie.jpg",
+              width: 1200,
+              height: 1800,
+              alt: "A man in a navy suit and bow tie buttoning his jacket",
+            },
+          },
+          {
+            caption: "Navy tuxedo and boutonnière",
+            photo: {
+              src: "/attire/sponsor-navy-tux-room.jpg",
+              width: 1054,
+              height: 1756,
+              alt: "A man in a navy double-breasted tuxedo with a bow tie and a white boutonnière",
+            },
+          },
+          {
+            caption: "Navy tuxedo and bow tie",
+            photo: {
+              src: "/attire/sponsor-navy-tux-wall.jpg",
+              width: 801,
+              height: 1335,
+              alt: "A man in a navy tuxedo and bow tie leaning against a wooden wall",
+            },
+          },
+        ],
       },
     ] satisfies Look[],
     guests: {
-      photo: {
-        src: "/attire/guests.png",
-        width: 368,
-        height: 700,
-        alt: "A man in a navy blue suit and tie beside a woman in a long midnight blue one-shoulder dress",
-      },
-      men: ["Dark suit, or slacks and a blazer", "White or light-colored shirt", "Navy or neutral tie", "Dress shoes"],
-      women: [
-        "Long or midi dress in midnight blue, champagne or neutral tones",
-        "Simple accessories",
-        "Dress shoes or heels",
+      men: [
+        "Midnight blue or dark suit, or slacks and a blazer",
+        "Light-colored dress shirt",
+        "Midnight blue or champagne tie",
+        "Dress shoes",
       ],
+      women: ["Long or midi dress in midnight blue or champagne", "Simple accessories", "Dress shoes or heels"],
+      // Guest looks in each color, shown as two auto-sliding carousels. Every photo is cropped to the same
+      // tall frame; `focus` moves the crop when someone stands off-centre (default "50% 50%").
+      // Photos from Unsplash, free to use: lhon karwan, Golf Modz, iKshana Productions, KASONGO BULOBO,
+      // Debabrata Ghosh, Samson Balogun, Alexis Maxell, gabbiistudios, Mihaela Claudia Puscas,
+      // ALIREZA Pandkhahi, Teodora Popa and MOHAMMAD AL JANNAT RAKIN.
+      midnightBlue: [
+        {
+          caption: "Strapless navy gown",
+          photo: {
+            src: "/attire/guest-navy-strapless-gown.jpg",
+            width: 1200,
+            height: 1800,
+            alt: "A woman in a strapless midnight blue gown in a garden",
+          },
+        },
+        {
+          caption: "Classic navy suit",
+          photo: {
+            src: "/attire/guest-navy-suit.jpg",
+            width: 1200,
+            height: 1800,
+            alt: "A man in a navy blue suit and white shirt against a plain backdrop",
+          },
+        },
+        {
+          caption: "Embroidered navy gown",
+          photo: {
+            src: "/attire/guest-navy-embroidered-gown.jpg",
+            width: 1200,
+            height: 1799,
+            alt: "A woman in a flowing midnight blue gown with silver embroidery",
+          },
+        },
+        {
+          caption: "Navy three-piece suit",
+          photo: {
+            src: "/attire/guest-navy-three-piece.jpg",
+            width: 1200,
+            height: 1800,
+            alt: "A man in a navy three-piece suit and tie",
+          },
+        },
+        {
+          caption: "Navy V-neck gown",
+          photo: {
+            src: "/attire/guest-navy-v-neck-gown.jpg",
+            width: 1200,
+            height: 1710,
+            alt: "A woman in a floor-length navy gown with a V neckline",
+          },
+        },
+        {
+          caption: "Navy double-breasted suit",
+          photo: {
+            src: "/attire/guest-navy-double-breasted.jpg",
+            width: 1200,
+            height: 1947,
+            alt: "A man in a navy double-breasted suit against a grey backdrop",
+          },
+        },
+      ] satisfies GuestLook[],
+      champagne: [
+        {
+          caption: "Champagne maxi dress",
+          photo: {
+            src: "/attire/guest-champagne-maxi.jpg",
+            width: 1200,
+            height: 1800,
+            alt: "A woman in a flowing champagne maxi dress",
+            focus: "30% 50%",
+          },
+        },
+        {
+          caption: "Beige three-piece suit and bow tie",
+          photo: {
+            src: "/attire/guest-beige-three-piece.jpg",
+            width: 1200,
+            height: 1500,
+            alt: "A man in a beige three-piece suit with a bow tie",
+            focus: "44% 50%",
+          },
+        },
+        {
+          caption: "Champagne beaded gown",
+          photo: {
+            src: "/attire/guest-champagne-gown.jpg",
+            width: 1200,
+            height: 2134,
+            alt: "A woman in a floor-length champagne beaded gown",
+          },
+        },
+        {
+          caption: "Beige double-breasted suit",
+          photo: {
+            src: "/attire/guest-beige-double-breasted.jpg",
+            width: 1200,
+            height: 2132,
+            alt: "A man in a beige double-breasted suit",
+          },
+        },
+        {
+          caption: "Champagne fitted gown",
+          photo: {
+            src: "/attire/guest-champagne-field-gown.jpg",
+            width: 1200,
+            height: 1800,
+            alt: "A woman in a fitted champagne gown standing in a field",
+          },
+        },
+        {
+          caption: "Beige suits",
+          photo: {
+            src: "/attire/guest-beige-suits-pair.jpg",
+            width: 1200,
+            height: 1800,
+            alt: "Two men in beige suits in front of a marble staircase",
+          },
+        },
+      ] satisfies GuestLook[],
     },
   },
 

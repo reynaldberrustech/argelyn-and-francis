@@ -819,10 +819,8 @@ main {
   padding: 0.45rem 0.5rem 0.45rem 1.2rem;
   border: 1px solid var(--hairline);
   border-radius: 3px;
-  background: rgba(12, 24, 52, 0.9);
+  background: rgba(12, 24, 52, 0.97);
   box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
 }
 
 .site-nav__mark {
@@ -1334,6 +1332,7 @@ main {
   display: block;
   background: linear-gradient(180deg, var(--color-gold-light), var(--color-gold-deep));
   transform-origin: top;
+  will-change: transform;
 }
 
 .program {
@@ -1555,66 +1554,6 @@ main {
     width: 3.5rem;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--color-gold) 50%, transparent);
-  }
-}
-
-.venues__map {
-  max-width: 68rem;
-  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
-}
-
-.venue-map {
-  display: grid;
-  justify-items: center;
-  gap: 1rem;
-}
-
-.venue-map__switch {
-  display: inline-flex;
-  padding: 4px;
-  border: 1px solid var(--gold-line);
-  border-radius: 999px;
-}
-
-.venue-map__option {
-  min-height: 40px;
-  padding: 0.3rem 1.2rem;
-  border: 0;
-  border-radius: 999px;
-  background: none;
-  color: var(--color-silver);
-  font-family: var(--font-serif);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-}
-
-.venue-map__option[aria-pressed="true"] {
-  background: linear-gradient(135deg, #f8dcb4, #e6b47f 55%, #cf9a62);
-  color: var(--color-navy);
-}
-
-.venue-map__frame {
-  width: 100%;
-  aspect-ratio: 16 / 7;
-  padding: 8px;
-  border: 1px solid var(--gold-line);
-}
-
-.venue-map__frame iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  filter: invert(0.92) hue-rotate(185deg) saturate(0.6) brightness(0.9) contrast(0.95);
-}
-
-@media (max-width: 700px) {
-  .venue-map__frame {
-    aspect-ratio: 4 / 3;
   }
 }
 
@@ -2011,9 +1950,11 @@ main {
   align-items: stretch;
 }
 
-/* Each column is as wide as its photos need, so every photo comes out the same height. */
+/* Entourage and principal sponsors side by side, each half the lookbook. */
 .lookbook__group {
-  flex: var(--grow) 1 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
   min-width: 0;
   padding-inline: clamp(0.75rem, 1.8vw, 1.6rem);
 }
@@ -2048,38 +1989,29 @@ main {
   text-wrap: balance;
 }
 
-.lookbook__looks {
-  display: flex;
-  align-items: flex-start;
-  gap: clamp(0.5rem, 1.2vw, 1rem);
-  margin-inline: auto;
+/* What each role wears, side by side above the photos */
+.lookbook__roles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+  margin: 0 auto 1.4rem;
+  text-align: center;
 }
 
-.look {
-  flex: var(--ar) 1 0;
-  min-width: 0;
+.lookbook__roles div {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+}
+
+.lookbook__roles dd {
   margin: 0;
 }
 
-.look + .look {
-  padding-left: clamp(0.5rem, 1.2vw, 1rem);
-  border-left: 1px solid rgba(19, 36, 74, 0.1);
-}
-
-.look__photo img {
-  display: block;
+/* Both carousels sit at the foot of their column, so they line up even when one description is longer. */
+.lookbook__group > .look-carousel {
   width: 100%;
-  height: auto;
-  /* Soften the edges into the paper. */
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 4%, #000 94%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0, #000 4%, #000 94%, transparent 100%);
-}
-
-.look figcaption {
-  display: grid;
-  gap: 0.35rem;
-  margin-top: 0.9rem;
-  text-align: center;
+  margin-top: auto;
 }
 
 .look__role {
@@ -2099,37 +2031,168 @@ main {
   text-wrap: balance;
 }
 
-/* Second row: the guests on the left, the palette and tagline on the right. */
-.lookbook__lower {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+/* Guests: the midnight blue look with what to wear, then more looks in champagne. */
+.lookbook__guests {
   margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
   padding-top: clamp(1.75rem, 3.5vw, 2.5rem);
   border-top: 1px solid rgba(19, 36, 74, 0.16);
 }
 
-.lookbook__lower .lookbook__group--guests {
-  border-right: 1px solid rgba(19, 36, 74, 0.16);
-}
-
-/* Guests: the photo, with what to wear beside it. */
-.lookbook__group--guests .lookbook__looks {
+/* "In champagne", between two fine gold rules */
+.lookbook__shade {
+  display: flex;
   align-items: center;
-  max-width: 38rem;
+  gap: 1rem;
+  max-width: 40rem;
+  margin: clamp(2rem, 4vw, 2.75rem) auto clamp(1.1rem, 2.5vw, 1.6rem);
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.lookbook__group--guests .look {
-  flex: 0 0 auto;
-  width: clamp(120px, 14vw, 190px);
+.lookbook__shade::before,
+.lookbook__shade::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(176, 122, 63, 0.6));
+}
+
+.lookbook__shade::after {
+  background: linear-gradient(90deg, rgba(176, 122, 63, 0.6), transparent);
+}
+
+/* Guest looks: a strip that slides along by itself, one look at a time. */
+.look-carousel {
+  --per-view: 4;
+  --gap: clamp(0.6rem, 1.4vw, 1.1rem);
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+.look-carousel__track {
+  display: flex;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0 0 0.6rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.look-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.look-carousel__slide {
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  scroll-snap-align: start;
+}
+
+.look-carousel__slide figure {
+  margin: 0;
+}
+
+/* Every look in the same tall frame with an arched top, like chapel windows. */
+.look-carousel__photo {
+  aspect-ratio: 3 / 5;
+  overflow: hidden;
+  border-radius: 50% 50% 4px 4px / 14% 14% 4px 4px;
+  background: #e6dfd7;
+  box-shadow: 0 10px 18px -14px rgba(19, 36, 74, 0.7);
+}
+
+.look-carousel__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.look-carousel__caption {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.6rem;
+  text-align: center;
+}
+
+.look-carousel__controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.look-carousel__button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(19, 36, 74, 0.28);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.look-carousel__button:hover {
+  border-color: var(--ink);
+  background: rgba(19, 36, 74, 0.06);
+}
+
+.look-carousel__button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.look-carousel__button svg .is-filled {
+  fill: currentColor;
+  stroke: none;
+}
+
+.look-carousel--half {
+  --per-view: 2;
+  max-width: none;
+}
+
+@media (max-width: 1100px) {
+  .look-carousel--half {
+    --per-view: 3;
+  }
+}
+
+@media (max-width: 900px) {
+  .look-carousel {
+    --per-view: 3;
+  }
+}
+
+@media (max-width: 600px) {
+  .look-carousel,
+  .look-carousel--half {
+    --per-view: 2;
+  }
 }
 
 .lookbook__lists {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-content: start;
-  gap: 1.1rem 1.4rem;
-  flex: 1 1 0;
-  min-width: 0;
+  gap: 1.1rem 2.5rem;
+  max-width: 40rem;
+  margin-inline: auto;
 }
 
 .lookbook__lists h4 {
@@ -2165,14 +2228,16 @@ main {
   background: #b07a3f;
 }
 
-/* Palette and tagline */
+/* Palette and tagline, closing the lookbook */
 .lookbook__foot {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.75rem;
-  padding-inline: clamp(1rem, 3vw, 2.5rem);
+  gap: 1.5rem;
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  padding-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  border-top: 1px solid rgba(19, 36, 74, 0.16);
   text-align: center;
 }
 
@@ -2205,13 +2270,15 @@ main {
   font-size: 1.05rem;
 }
 
+/* Round satin swatches: a soft highlight so midnight blue reads as blue, not black. */
 .lookbook__swatch {
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 3.1rem;
+  height: 3.1rem;
   border-radius: 50%;
   box-shadow:
-    inset 0 0 0 1px rgba(19, 36, 74, 0.18),
-    0 6px 12px -8px rgba(19, 36, 74, 0.6);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    inset 0 -6px 12px rgba(0, 0, 0, 0.18),
+    0 8px 16px -8px rgba(19, 36, 74, 0.7);
 }
 
 .lookbook__closing {
@@ -2258,39 +2325,10 @@ main {
     min-height: 0;
   }
 
-  /* Keeps the photos from growing taller than about 22rem on wide tablets. */
-  .lookbook__looks {
-    max-width: calc(var(--grow) * 22rem);
-  }
 
-  .lookbook__lower {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .lookbook__lower .lookbook__group--guests {
-    border-right: 0;
-  }
-
-  .lookbook__group--guests .lookbook__looks {
-    max-width: 34rem;
-  }
-
-  .lookbook__group--guests .look {
-    width: clamp(140px, 24vw, 210px);
-  }
-
-  .lookbook__foot {
-    margin-top: 1.75rem;
-    padding: 1.75rem 0 0;
-    border-top: 1px solid rgba(19, 36, 74, 0.16);
-  }
 }
 
 @media (max-width: 560px) {
-  .lookbook__group--guests .look {
-    width: 42%;
-  }
-
   .lookbook__lists {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2308,8 +2346,8 @@ main {
   }
 
   .lookbook__swatch {
-    width: 2rem;
-    height: 2rem;
+    width: 2.6rem;
+    height: 2.6rem;
   }
 }
 
@@ -2882,10 +2920,8 @@ main {
   height: 48px;
   border: 1px solid var(--gold-line);
   border-radius: 50%;
-  background: rgba(12, 24, 52, 0.85);
+  background: rgba(12, 24, 52, 0.94);
   color: var(--color-gold-light);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .music__bars {
@@ -2897,8 +2933,10 @@ main {
 
 .music__bars span {
   width: 2px;
-  height: 30%;
+  height: 100%;
   background: currentColor;
+  transform-origin: 50% 100%;
+  scale: 1 0.3;
 }
 
 .music.is-playing .music__bars span {
@@ -2916,10 +2954,10 @@ main {
 @keyframes music-bars {
   0%,
   100% {
-    height: 30%;
+    scale: 1 0.3;
   }
   50% {
-    height: 100%;
+    scale: 1 1;
   }
 }
 
@@ -2988,20 +3026,10 @@ main {
   clip-path: circle(0% at 0 0);
   transform-origin: 0 0;
   transition: clip-path 2.8s cubic-bezier(0.45, 0, 0.25, 1);
-  animation: floral-sway 9s ease-in-out infinite alternate;
 }
 
 .floral-corner[data-shown] .floral-corner__art {
   clip-path: circle(150% at 0 0);
-}
-
-@keyframes floral-sway {
-  from {
-    transform: rotate(-1deg);
-  }
-  to {
-    transform: rotate(1.4deg);
-  }
 }
 
 .floral-garland {
@@ -3178,9 +3206,20 @@ main {
 
 /* ───────── Photos that open into place ───────── */
 
+/* Opens from the centre when scrolled to (data-shown is set by RevealPhoto). */
 .reveal-photo {
   position: relative;
   overflow: hidden;
+  opacity: 0;
+  clip-path: inset(14% 10% 14% 10%);
+  transition:
+    clip-path 1.5s var(--ease-out),
+    opacity 1s var(--ease-out);
+}
+
+.reveal-photo[data-shown] {
+  opacity: 1;
+  clip-path: inset(0);
 }
 
 .reveal-photo__inner {
@@ -3191,6 +3230,30 @@ main {
 .reveal-photo__zoom {
   position: absolute;
   inset: 0;
+  scale: 1.16;
+  transition: scale 2.2s var(--ease-out);
+}
+
+.reveal-photo[data-shown] .reveal-photo__zoom {
+  scale: 1;
+}
+
+/* The gentle drift is tied to the scroll by the browser itself, with no script running.
+   Browsers that can't do this yet (Safari, Firefox) just show the photo still. */
+@supports (animation-timeline: view()) {
+  .reveal-photo--drift .reveal-photo__inner {
+    animation: photo-drift linear both;
+    animation-timeline: view();
+  }
+}
+
+@keyframes photo-drift {
+  from {
+    translate: 0 -6%;
+  }
+  to {
+    translate: 0 6%;
+  }
 }
 
 .reveal-photo img {
@@ -3226,6 +3289,7 @@ main {
   height: 100%;
   margin-left: calc(var(--slide-w) / -2);
   cursor: pointer;
+  will-change: transform, opacity;
 }
 
 .carousel__slide.is-current {
@@ -3470,6 +3534,7 @@ main {
   background: linear-gradient(90deg, var(--color-gold-deep), var(--color-gold-light));
   transform-origin: 0 50%;
   pointer-events: none;
+  will-change: transform;
 }
 
 /* Countdown numbers roll up to their new value. */
@@ -3482,6 +3547,45 @@ main {
 
 .roll__value {
   display: block;
+  animation: roll-in 0.55s var(--ease-out) both;
+}
+
+@keyframes roll-in {
+  from {
+    opacity: 0;
+    translate: 0 70%;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ───────── Reveals ───────── */
+
+/* Content drifts up into view the first time it's scrolled to (data-shown is set by Reveal).
+   Only opacity and translate change, so the graphics card does the work and the page isn't redrawn. */
+.reveal {
+  transition:
+    opacity 0.9s var(--ease-out) var(--reveal-delay, 0s),
+    translate 1.1s var(--ease-out) var(--reveal-delay, 0s);
+}
+
+.reveal--rise:not([data-shown]) {
+  opacity: 0;
+  translate: 0 22px;
+}
+
+.reveal--curtain {
+  clip-path: inset(0 0 0 0);
+  transition:
+    opacity 0.6s var(--ease-out) var(--reveal-delay, 0s),
+    clip-path 1.3s var(--ease-out) var(--reveal-delay, 0s);
+}
+
+.reveal--curtain:not([data-shown]) {
+  opacity: 0;
+  clip-path: inset(100% 0 0 0);
 }
 
 /* A soft gold sheen sweeps across buttons on hover. */
@@ -3526,14 +3630,14 @@ main {
 
 @keyframes cue-fall {
   0% {
-    top: 0;
+    translate: 0 0;
     opacity: 0;
   }
   25% {
     opacity: 1;
   }
   100% {
-    top: 34px;
+    translate: 0 34px;
     opacity: 0;
   }
 }
@@ -4936,5 +5040,21 @@ html.is-sealed:has(.ledger-page) {
   .guest-sheet::backdrop,
   .ledger-toast {
     transition: none;
+  }
+
+  .reveal,
+  .reveal-photo,
+  .reveal-photo__zoom {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .reveal--rise:not([data-shown]) {
+    translate: none;
+  }
+
+  .reveal-photo--drift .reveal-photo__inner,
+  .roll__value {
+    animation: none;
   }
 }
