@@ -63,6 +63,11 @@ export const wedding = {
     bride: "Argelyn",
   },
 
+  // The home page monogram. `join`: "&" (F & A) or "and" (F and A).
+  // `line`: the fine gold line drawn across behind the join.
+  // To compare without changing these, open the site with ?monogram=and or ?monogram=amp, and ?line=on or ?line=off.
+  monogram: { join: "&" as "&" | "and", line: false },
+
   // Ceremony start and the end of the reception, in Philippine time (UTC+8).
   startsAt: "2027-01-30T13:00:00+08:00",
   endsAt: "2027-01-30T20:30:00+08:00",
@@ -525,9 +530,6 @@ export const wedding = {
       ] satisfies GuestLook[],
     },
   },
-
-  gifts:
-    "Having you there is the gift we're most looking forward to. If you'd like to give something more, a monetary gift toward our first home together would mean a great deal. There will be a gift box at the reception.",
 
   // Answers can use {hashtag}, {church}, {venue} (the reception) and {deadline}; they're filled in automatically.
   faqs: [

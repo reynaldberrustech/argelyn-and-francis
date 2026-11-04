@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "motion/react";
+import { useSyncExternalStore } from "react";
 import { wedding } from "@/content/wedding";
 import type { Lettering } from "@/lib/lettering-types";
 import { FloralCorner } from "./Florals";
@@ -10,10 +11,16 @@ import { ScriptWord, writingTime } from "./ScriptWord";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// The monogram is written in order: F, then "and", then A.
+// The monogram is written in order: F, then "&" (or "and"), then A.
 const FIRST_AT = 0.7;
 const AND_AT = 1.5;
 const SECOND_AT = 2.1;
+
+// ?monogram=and|amp and ?line=on|off preview the other options without changing the settings.
+const subscribeNoop = () => () => {};
+const readJoinPreview = () => new URLSearchParams(window.location.search).get("monogram");
+const readLinePreview = () => new URLSearchParams(window.location.search).get("line");
+const noPreview = () => null;
 
 function grow(delay: number, axis: "x" | "y"): Variants {
   const transition = { duration: 1.4, delay, ease: EASE };
@@ -29,10 +36,14 @@ function rise(delay: number): Variants {
   };
 }
 
-/** The monogram page: the couple's initials and "and", written in gold calligraphy, framed by flowers. */
+/** The monogram page: the couple's initials joined by "&" (or "and"), written in gold calligraphy, framed by flowers. */
 export function Hero({ lettering }: { lettering: Lettering }) {
   const { opened } = useInvite();
   const { groom, bride } = wedding.couple;
+  const joinPreview = useSyncExternalStore(subscribeNoop, readJoinPreview, noPreview);
+  const linePreview = useSyncExternalStore(subscribeNoop, readLinePreview, noPreview);
+  const useAmpersand = joinPreview === "amp" ? true : joinPreview === "and" ? false : wedding.monogram.join === "&";
+  const showLine = linePreview === "on" ? true : linePreview === "off" ? false : wedding.monogram.line;
   const done = writingTime(lettering.second, SECOND_AT);
 
   return (
@@ -60,10 +71,18 @@ export function Hero({ lettering }: { lettering: Lettering }) {
         </motion.span>
         <ScriptWord word={lettering.first} play={opened} delay={FIRST_AT} className="monogram__letter" />
         <span className="monogram__and">
-          <motion.span className="monogram__line" variants={grow(1.2, "x")}>
-            <TaperedLine />
-          </motion.span>
-          <ScriptWord word={lettering.and} play={opened} delay={AND_AT} className="monogram__script" />
+          {showLine ? (
+            <motion.span className="monogram__line" variants={grow(1.2, "x")}>
+              <TaperedLine />
+            </motion.span>
+          ) : null}
+          <ScriptWord
+            key={useAmpersand ? "amp" : "and"}
+            word={useAmpersand ? lettering.ampersand : lettering.and}
+            play={opened}
+            delay={AND_AT}
+            className={`monogram__script${useAmpersand ? " monogram__script--amp" : ""}`}
+          />
         </span>
         <ScriptWord word={lettering.second} play={opened} delay={SECOND_AT} className="monogram__letter" />
         <motion.span className="monogram__rule monogram__rule--bottom" variants={grow(done - 0.8, "y")}>

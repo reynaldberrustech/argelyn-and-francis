@@ -17,7 +17,7 @@ Built with Next.js 16 (App Router), React 19, Tailwind CSS 4 and Motion. Ready t
 9. **Our Prenup**: a photo gallery. Tap a photo to see it full screen; swipe or use the arrow keys to move between them.
 10. **Attire**: a lookbook with auto-sliding carousels of sample photos for every look (bridesmaids and groomsmen, sponsors, and guests in midnight blue and in champagne), what each role wears, and the two suggested colors.
 11. **Entourage**: parents, sponsors, best man and maid of honor, groomsmen, bridesmaids and the little ones.
-12. **Details**: a note on gifts and common questions.
+12. **Details**: answers to common questions.
 13. **Kindly Reply**: a reply card that saves answers to a Google Sheet. Guests who are coming can also say who's coming with them and note any food allergies or diet needs.
 14. **Thank you**: a note, a photo and the couple's sign-off, with the hashtag. Below it, a small **Couple login** link opens your private guest list (see [Your guest list](#your-guest-list-for-the-two-of-you)).
 
@@ -53,7 +53,7 @@ Everything guests read is in **`src/content/wedding.ts`**. Before you share the 
 - [ ] Replace the placeholder names in `entourage` (for example "Ninong's name" and "Groomsman's name"). Add or remove lines to match your entourage.
 - [ ] Check the times in `schedule`, plus `startsAt` and `endsAt` (Philippine time, `+08:00`).
 - [ ] Set `mapsQuery` for both places in `venues` to their exact coordinates. Google Maps finds neither the church (listed by the diocese as Santo Niño Parish) nor "Malangas Budget Hotel" by name, so both sets of directions point at the town of Malangas for now. In Google Maps, right-click the building, click the coordinates to copy them, and paste them in as `"7.xxxxx,123.xxxxx"`.
-- [ ] Check `rsvp.deadline`, `hashtag`, `gifts` and `faqs`.
+- [ ] Check `rsvp.deadline`, `hashtag` and `faqs`.
 
 The reception hall plan in the Venues section follows the moodboard layout: stage, aisle, family tables, guest tables, buffet, photo booth and entrance. Edit `src/components/HallPlan.tsx` if the real room is different.
 

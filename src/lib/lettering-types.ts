@@ -12,6 +12,8 @@ export type Lettering = {
   first: ScriptWord;
   second: ScriptWord;
   and: ScriptWord;
+  /** "&" on its own, for the monogram (sized like "and") */
+  ampersand: ScriptWord;
   save: ScriptWord;
   the: ScriptWord;
   date: ScriptWord;
