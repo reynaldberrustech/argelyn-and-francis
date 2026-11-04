@@ -67,10 +67,6 @@ export function mapsDirectionsUrl(query: string) {
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
 }
 
-export function mapsEmbedUrl(query: string) {
-  return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
-}
-
 /** Fills {hashtag}, {church}, {venue} (the reception) and {deadline} in FAQ answers. */
 export function fillTokens(text: string) {
   return text

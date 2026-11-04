@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import { wedding } from "@/content/wedding";
 import { googleCalendarUrl, weddingEnd, weddingStart } from "@/lib/calendar";
 import type { Lettering } from "@/lib/lettering-types";
@@ -14,22 +13,16 @@ const HOUR = 3_600_000;
 const MINUTE = 60_000;
 const calendarUrl = googleCalendarUrl();
 
-/** A number that rolls up to its new value, like a split-flap clock. */
+/**
+ * A number that rolls up to its new value, like a split-flap clock.
+ * A new key restarts a short CSS animation (`.roll__value`), so ticking never re-measures the page.
+ */
 function Roll({ text }: { text: string }) {
   return (
     <span className="roll">
-      <AnimatePresence initial={false} mode="popLayout">
-        <motion.span
-          key={text}
-          className="roll__value"
-          initial={{ y: "75%", opacity: 0, filter: "blur(4px)" }}
-          animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: "-75%", opacity: 0, filter: "blur(4px)" }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {text}
-        </motion.span>
-      </AnimatePresence>
+      <span key={text} className="roll__value">
+        {text}
+      </span>
     </span>
   );
 }

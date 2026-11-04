@@ -3,7 +3,6 @@ import { mapsDirectionsUrl, mapsSearchUrl } from "@/lib/calendar";
 import { HallPlan } from "./HallPlan";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
-import { VenueMap } from "./VenueMap";
 
 function VenueCard({ place }: { place: Place }) {
   return (
@@ -27,7 +26,7 @@ function VenueCard({ place }: { place: Place }) {
   );
 }
 
-/** The church, then the hotel: two cards joined by a gold line, with one map that switches between them. */
+/** The church, then the hotel: two cards joined by a gold line, each with directions. */
 export function Venue() {
   const { ceremony, reception } = wedding.venues;
 
@@ -52,10 +51,6 @@ export function Venue() {
           <VenueCard place={reception} />
         </Reveal>
       </div>
-
-      <Reveal className="venues__map" delay={0.1}>
-        <VenueMap places={[ceremony, reception]} />
-      </Reveal>
 
       <HallPlan />
     </section>
