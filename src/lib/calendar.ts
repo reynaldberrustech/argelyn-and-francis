@@ -4,8 +4,9 @@ export const weddingStart = new Date(wedding.startsAt);
 export const weddingEnd = new Date(wedding.endsAt);
 
 const eventTitle = `${wedding.couple.groom} & ${wedding.couple.bride}'s Wedding`;
-const eventLocation = `${wedding.venue.name}, ${wedding.venue.town}`;
-const eventDetails = `Ceremony at ${wedding.schedule[1]?.time ?? "3:00 PM"}, with dinner and dancing to follow.`;
+const { ceremony, reception } = wedding.venues;
+const eventLocation = `${ceremony.name}, ${ceremony.town}`;
+const eventDetails = `Wedding ceremony at ${ceremony.time} at ${ceremony.name}. Reception to follow at ${reception.time} at ${reception.name}, ${reception.town}.`;
 
 /** 2027-01-30T07:00:00.000Z -> 20270130T070000Z */
 function toCalendarStamp(date: Date) {
@@ -58,22 +59,23 @@ export function icsFile() {
   return lines.join("\r\n") + "\r\n";
 }
 
-export function mapsSearchUrl() {
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(wedding.venue.mapsQuery)}`;
+export function mapsSearchUrl(query: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
-export function mapsDirectionsUrl() {
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(wedding.venue.mapsQuery)}`;
+export function mapsDirectionsUrl(query: string) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
 }
 
-export function mapsEmbedUrl() {
-  return `https://maps.google.com/maps?q=${encodeURIComponent(wedding.venue.mapsQuery)}&z=15&output=embed`;
+export function mapsEmbedUrl(query: string) {
+  return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
 }
 
-/** Fills {hashtag}, {venue} and {deadline} in FAQ answers. */
+/** Fills {hashtag}, {church}, {venue} (the reception) and {deadline} in FAQ answers. */
 export function fillTokens(text: string) {
   return text
     .replaceAll("{hashtag}", wedding.hashtag)
-    .replaceAll("{venue}", wedding.venue.name)
+    .replaceAll("{church}", ceremony.name)
+    .replaceAll("{venue}", reception.name)
     .replaceAll("{deadline}", wedding.rsvp.deadline);
 }

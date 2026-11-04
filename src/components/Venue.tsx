@@ -1,41 +1,61 @@
-import { wedding } from "@/content/wedding";
-import { mapsDirectionsUrl, mapsEmbedUrl, mapsSearchUrl } from "@/lib/calendar";
+import { wedding, type Venue as Place } from "@/content/wedding";
+import { mapsDirectionsUrl, mapsSearchUrl } from "@/lib/calendar";
 import { HallPlan } from "./HallPlan";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
+import { VenueMap } from "./VenueMap";
 
+function VenueCard({ place }: { place: Place }) {
+  return (
+    <article className="venue-card">
+      <p className="caps venue-card__label">
+        {place.label}
+        <span className="venue-card__time">{place.time}</span>
+      </p>
+      <h3 className="venue-card__name">{place.name}</h3>
+      <p className="caps venue-card__town">{place.town}</p>
+      <p className="venue-card__detail">{place.detail}</p>
+      <div className="venue-card__actions">
+        <a className="btn btn--solid btn--small" href={mapsDirectionsUrl(place.mapsQuery)} target="_blank" rel="noopener noreferrer">
+          Get directions
+        </a>
+        <a className="btn btn--small" href={mapsSearchUrl(place.mapsQuery)} target="_blank" rel="noopener noreferrer">
+          Open in Google Maps
+        </a>
+      </div>
+    </article>
+  );
+}
+
+/** The church, then the hotel: two cards joined by a gold line, with one map that switches between them. */
 export function Venue() {
-  const { venue } = wedding;
+  const { ceremony, reception } = wedding.venues;
 
   return (
     <section id="venue" className="section" aria-labelledby="venue-title">
-      <SectionHeading id="venue-title" title="The Venue" />
+      <SectionHeading
+        id="venue-title"
+        title="The Venues"
+        intro={`We say our vows at ${ceremony.name}, then everyone heads to ${reception.name} to celebrate.`}
+      />
 
-      <div className="venue">
-        <Reveal className="venue__info">
-          <h3 className="venue__name">{venue.name}</h3>
-          <p className="venue__town">{venue.town}</p>
-          <p className="venue__detail">{venue.detail}</p>
-          <div className="venue__actions">
-            <a className="btn btn--solid" href={mapsDirectionsUrl()} target="_blank" rel="noopener noreferrer">
-              Get directions
-            </a>
-            <a className="btn" href={mapsSearchUrl()} target="_blank" rel="noopener noreferrer">
-              Open in Google Maps
-            </a>
-          </div>
+      <div className="venues">
+        <Reveal className="venues__item">
+          <VenueCard place={ceremony} />
         </Reveal>
-
-        <Reveal className="venue__map" delay={0.1}>
-          <iframe
-            title={`Map showing ${venue.name}`}
-            src={mapsEmbedUrl()}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-          />
+        <div className="venues__then" aria-hidden="true">
+          <span className="venues__line" />
+          <span className="venues__word">then</span>
+          <span className="venues__line" />
+        </div>
+        <Reveal className="venues__item" delay={0.12}>
+          <VenueCard place={reception} />
         </Reveal>
       </div>
+
+      <Reveal className="venues__map" delay={0.1}>
+        <VenueMap places={[ceremony, reception]} />
+      </Reveal>
 
       <HallPlan />
     </section>

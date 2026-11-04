@@ -4,7 +4,7 @@
  * Before sharing the link:
  *  1. Replace every name marked with a role (e.g. "Ninong's name") in `entourage`.
  *  2. Check the times in `schedule` and `startsAt` / `endsAt`.
- *  3. Check `venue.mapsQuery` points the map at the right place.
+ *  3. Check each `mapsQuery` in `venues` points the map at the right building.
  *  4. Put your own prenup photos in /public/prenup and list them in `photos`.
  */
 
@@ -14,6 +14,19 @@ export type ScheduleItem = {
   iso: string;
   title: string;
   detail: string;
+  /** Which of the two places this happens at */
+  place: "ceremony" | "reception";
+};
+
+export type Venue = {
+  /** "The Ceremony" or "The Reception" */
+  label: string;
+  name: string;
+  town: string;
+  time: string;
+  detail: string;
+  /** What the map and "Get directions" point to: a place name, or exact coordinates like "7.12345,123.12345". */
+  mapsQuery: string;
 };
 
 export type Pair = { left: string; right: string };
@@ -22,9 +35,12 @@ export type RolePair = { role: string; meaning: string } & Pair;
 
 export type RoleGroup = { role: string; meaning: string; names: string[] };
 
-export type Look = { role: string; description: string; colors: string[] };
-
-export type GuestLook = { role: string; items: string[]; colors: string[] };
+/** One outfit in the dress code, with a photo of models wearing it. Photos live in /public/attire. */
+export type Look = {
+  role: string;
+  description: string;
+  photo: { src: string; width: number; height: number; alt: string };
+};
 
 /**
  * One photo. `shape` sets how much room it takes in the gallery:
@@ -39,8 +55,8 @@ export const wedding = {
   },
 
   // Ceremony start and the end of the reception, in Philippine time (UTC+8).
-  startsAt: "2027-01-30T15:00:00+08:00",
-  endsAt: "2027-01-30T21:30:00+08:00",
+  startsAt: "2027-01-30T13:00:00+08:00",
+  endsAt: "2027-01-30T20:30:00+08:00",
 
   date: {
     weekday: "Saturday",
@@ -49,8 +65,8 @@ export const wedding = {
     year: "2027",
     long: "Saturday, January 30, 2027",
     short: "January 30, 2027",
-    time: "3:00 in the afternoon",
-    timeWords: "Three o'clock in the afternoon",
+    time: "1:00 in the afternoon",
+    timeWords: "One o'clock in the afternoon",
   },
 
   // Wording on the invitation pages, in the order guests see them.
@@ -95,20 +111,35 @@ export const wedding = {
   thankYou:
     "Thank you for being part of our journey. Your love and support mean the world to us. We can't wait to celebrate this new beginning with you.",
 
-  venue: {
-    name: "Malangas Budget Hotel",
-    town: "Malangas, Zamboanga Sibugay",
-    detail: "The ceremony and the reception are both at the hotel, so once you arrive you're set for the whole day.",
-    // What the map and "Get directions" point to. Google Maps has no listing named "Malangas Budget Hotel"
-    // (searching for it lands on a different hotel), so this points at the town for now.
-    // Replace it with the hotel's exact coordinates, e.g. "7.12345,123.12345" (in Google Maps,
-    // right-click the building and click the numbers to copy them).
-    mapsQuery: "Malangas, Zamboanga Sibugay, Philippines",
-  },
+  // The wedding is at the church, then everyone goes on to the hotel for the reception.
+  // For each map, the safest `mapsQuery` is the building's exact coordinates, e.g. "7.12345,123.12345"
+  // (in Google Maps, right-click the building and click the numbers to copy them).
+  venues: {
+    ceremony: {
+      label: "The Ceremony",
+      name: "Malangas Catholic Church",
+      town: "Malangas, Zamboanga Sibugay",
+      time: "1:00 PM",
+      detail: "Our wedding Mass begins at one o'clock. Please be seated by 12:30 so you're settled before the entourage walks in.",
+      // The diocese lists the church in Malangas as Santo Niño Parish, but Google Maps doesn't find it by name,
+      // so this points at the town until you paste in the church's coordinates.
+      mapsQuery: "Malangas, Zamboanga Sibugay, Philippines",
+    },
+    reception: {
+      label: "The Reception",
+      name: "Malangas Budget Hotel",
+      town: "Malangas, Zamboanga Sibugay",
+      time: "3:30 PM",
+      detail: "Right after the photos at the church, join us at the hotel for dinner, toasts and dancing.",
+      // Google Maps has no listing named "Malangas Budget Hotel" (searching for it lands on a different hotel),
+      // so this points at the town until you paste in the hotel's coordinates.
+      mapsQuery: "Malangas, Zamboanga Sibugay, Philippines",
+    },
+  } satisfies Record<"ceremony" | "reception", Venue>,
 
   taglines: {
     closing: "Two hearts, one beautiful journey.",
-    attire: "Formal but comfortable. Elegant in every shade of blue.",
+    attire: "Formal but comfortable. Elegant in every shade.",
   },
 
   hashtag: "#FrancisAndArgelyn2027",
@@ -121,34 +152,46 @@ export const wedding = {
 
   schedule: [
     {
+      time: "12:30 PM",
+      iso: "2027-01-30T12:30:00+08:00",
+      title: "Guests arrive",
+      detail: "Find a seat in the church and settle in before the entourage walks in.",
+      place: "ceremony",
+    },
+    {
+      time: "1:00 PM",
+      iso: "2027-01-30T13:00:00+08:00",
+      title: "Wedding ceremony",
+      detail: "Our wedding Mass, where Francis and Argelyn exchange their vows in front of the people they love most.",
+      place: "ceremony",
+    },
+    {
       time: "2:30 PM",
       iso: "2027-01-30T14:30:00+08:00",
-      title: "Guests arrive",
-      detail: "Find your seat and settle in before the processional begins.",
+      title: "Photos at the church",
+      detail: "Photos with family, sponsors and the entourage at the altar. Then we all head to the hotel.",
+      place: "ceremony",
     },
     {
-      time: "3:00 PM",
-      iso: "2027-01-30T15:00:00+08:00",
-      title: "Wedding ceremony",
-      detail: "Francis and Argelyn exchange their vows in front of the people they love most.",
+      time: "3:30 PM",
+      iso: "2027-01-30T15:30:00+08:00",
+      title: "Reception",
+      detail: "Drinks and light bites as everyone arrives, then the newlyweds make their entrance.",
+      place: "reception",
     },
     {
-      time: "4:30 PM",
-      iso: "2027-01-30T16:30:00+08:00",
-      title: "Photos and cocktails",
-      detail: "Light bites and drinks while we take photos with family and the entourage.",
-    },
-    {
-      time: "6:00 PM",
-      iso: "2027-01-30T18:00:00+08:00",
-      title: "Dinner and reception",
+      time: "5:00 PM",
+      iso: "2027-01-30T17:00:00+08:00",
+      title: "Dinner and program",
       detail: "Dinner at the buffet, toasts from the people who know us best, and our first dance.",
+      place: "reception",
     },
     {
-      time: "9:00 PM",
-      iso: "2027-01-30T21:00:00+08:00",
+      time: "8:00 PM",
+      iso: "2027-01-30T20:00:00+08:00",
       title: "Last dance",
       detail: "One more song together before we say goodnight.",
+      place: "reception",
     },
   ] satisfies ScheduleItem[],
 
@@ -190,64 +233,86 @@ export const wedding = {
     } satisfies { left: RoleGroup[]; right: RoleGroup[] },
   },
 
+  // The dress code, with photos of models in each look (in /public/attire).
   attire: {
-    // The colors of the day, shown as paint swatches.
     palette: [
-      { name: "Midnight blue", hex: "#1B2A66" },
-      { name: "Royal blue", hex: "#3F55B5" },
-      { name: "Dusty blue", hex: "#8E9DCF" },
-      { name: "Blush", hex: "#E7B7B4" },
+      { name: "Midnight blue", swatch: "#111D2D" },
+      { name: "Champagne", swatch: "#D2B79A" },
+      { name: "White", swatch: "#FFFFFF" },
+      { name: "Gold accents", swatch: "linear-gradient(135deg, #FECD81, #DEAD60 55%, #B98835)" },
     ],
     entourage: [
       {
         role: "Bridesmaids",
-        description: "Floor-length gowns in midnight blue, simple and classic.",
-        colors: ["#1B2A66"],
+        description: "Elegant floor-length gowns in midnight blue, with simple, classic designs.",
+        photo: {
+          src: "/attire/bridesmaids.png",
+          width: 492,
+          height: 596,
+          alt: "Four bridesmaids in floor-length midnight blue satin gowns, holding white rose bouquets",
+        },
       },
       {
         role: "Groomsmen",
         description: "Light gray suits with navy blue ties and white boutonnières.",
-        colors: ["#B9BDC4", "#1B2A66", "#F5F2EA"],
+        photo: {
+          src: "/attire/groomsmen.png",
+          width: 468,
+          height: 596,
+          alt: "Four groomsmen in light gray suits with navy blue ties and white boutonnières",
+        },
       },
     ] satisfies Look[],
     sponsors: [
       {
-        role: "Ladies",
-        description: "Formal gowns in dusty blue or blush, elegant, simple and coordinated.",
-        colors: ["#8E9DCF", "#E7B7B4"],
+        role: "Maid of honor & secondary sponsors (ladies)",
+        description: "Champagne or nude formal gowns: elegant, simple and coordinated.",
+        photo: {
+          src: "/attire/sponsors-ladies.png",
+          width: 392,
+          height: 596,
+          alt: "A woman in a champagne one-shoulder gown beside a man in a navy blue tuxedo",
+        },
       },
       {
-        role: "Gentlemen",
-        description: "Navy blue suits or a Barong Tagalog, with a navy or white necktie.",
-        colors: ["#1B2A66", "#F5F2EA"],
+        role: "Best man & secondary sponsors (gents)",
+        description: "Navy blue suits or tuxedos with champagne or white accents, and a bow tie or necktie.",
+        photo: {
+          src: "/attire/sponsors-gents.png",
+          width: 392,
+          height: 596,
+          alt: "A man in a navy blue tuxedo with a bow tie beside a woman in a champagne gown",
+        },
       },
     ] satisfies Look[],
-    guests: [
-      {
-        role: "Men",
-        items: ["Suit with a tie, or a Barong Tagalog", "Dark or neutral colors", "Dress shoes"],
-        colors: ["#1B2A66", "#3F55B5", "#F5F2EA"],
+    guests: {
+      photo: {
+        src: "/attire/guests.png",
+        width: 368,
+        height: 700,
+        alt: "A man in a navy blue suit and tie beside a woman in a long midnight blue one-shoulder dress",
       },
-      {
-        role: "Women",
-        items: [
-          "Long or midi dress in midnight blue, royal blue, dusty blue or blush",
-          "Simple accessories",
-          "Dress shoes or heels",
-        ],
-        colors: ["#1B2A66", "#3F55B5", "#8E9DCF", "#E7B7B4"],
-      },
-    ] satisfies GuestLook[],
+      men: ["Dark suit, or slacks and a blazer", "White or light-colored shirt", "Navy or neutral tie", "Dress shoes"],
+      women: [
+        "Long or midi dress in midnight blue, champagne or neutral tones",
+        "Simple accessories",
+        "Dress shoes or heels",
+      ],
+    },
   },
 
   gifts:
     "Having you there is the gift we're most looking forward to. If you'd like to give something more, a monetary gift toward our first home together would mean a great deal. There will be a gift box at the reception.",
 
-  // Answers can use {hashtag}, {venue} and {deadline}; they're filled in automatically.
+  // Answers can use {hashtag}, {church}, {venue} (the reception) and {deadline}; they're filled in automatically.
   faqs: [
     {
       q: "What time should I arrive?",
-      a: "Please be seated by 2:30 PM. The ceremony begins at 3:00 PM.",
+      a: "Please be seated at {church} by 12:30 PM. The ceremony begins at 1:00 PM.",
+    },
+    {
+      q: "Where is the reception?",
+      a: "At {venue}, a short drive from the church. We'll all head there after the photos at the church, and the reception starts at 3:30 PM.",
     },
     {
       q: "Can I bring someone with me?",
@@ -255,11 +320,11 @@ export const wedding = {
     },
     {
       q: "Can I take photos during the ceremony?",
-      a: "We'd love you to be fully present for the vows, so please keep phones away during the ceremony. At the reception, take as many as you like and tag them {hashtag}.",
+      a: "We'd love you to be fully present for the vows, so please keep phones away during the Mass. At the reception, take as many as you like and tag them {hashtag}.",
     },
     {
       q: "Is there somewhere to stay nearby?",
-      a: "The venue is a hotel. If you're travelling from out of town, contact {venue} directly about rooms for the night.",
+      a: "The reception is at a hotel. If you're travelling from out of town, contact {venue} directly about rooms for the night.",
     },
     {
       q: "What if I can't make it?",
@@ -267,9 +332,10 @@ export const wedding = {
     },
   ],
 
-  // Optional background music. Put an mp3 in /public/audio and set e.g.
-  // { src: "/audio/our-song.mp3", title: "Our song" }. It starts when the envelope is opened.
-  music: null as null | { src: string; title: string },
+  // Background music. It starts on its own where the browser allows, and otherwise the moment the guest
+  // taps the seal. To use your own song, put an mp3 in /public/audio and change these, or set to null for none.
+  // Canon in D: United States Air Force Band (Strolling Strings), public domain.
+  music: { src: "/audio/canon-in-d.mp3", title: "Canon in D" } as null | { src: string; title: string },
 };
 
 export type Wedding = typeof wedding;

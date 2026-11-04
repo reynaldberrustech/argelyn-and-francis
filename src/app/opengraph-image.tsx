@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { wedding } from "@/content/wedding";
 
-export const alt = `${wedding.couple.groom} & ${wedding.couple.bride}, ${wedding.date.long}, ${wedding.venue.name}`;
+export const alt = `${wedding.couple.groom} & ${wedding.couple.bride}, ${wedding.date.long}, ${wedding.venues.ceremony.name}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,7 +20,7 @@ const caps = { fontFamily: "Cormorant", letterSpacing: 6, textTransform: "upperc
 /** The link preview: the gold monogram on the left, names and date on the right. */
 export default function Image() {
   const { groom, bride } = wedding.couple;
-  const { date, venue } = wedding;
+  const { date, venues } = wedding;
   return new ImageResponse(
     <div
       style={{
@@ -93,8 +93,10 @@ export default function Image() {
         <div style={{ ...caps, fontSize: 22, color: GOLD_LIGHT, marginTop: 30 }}>
           {`${date.weekday} / ${date.short}`}
         </div>
-        <div style={{ ...caps, fontSize: 17, letterSpacing: 4, color: "#CDD4E8", marginTop: 12 }}>{venue.name}</div>
-        <div style={{ ...caps, fontSize: 15, letterSpacing: 4, color: "#A6B2D2", marginTop: 4 }}>{venue.town}</div>
+        <div style={{ ...caps, fontSize: 17, letterSpacing: 4, color: "#CDD4E8", marginTop: 12 }}>{venues.ceremony.name}</div>
+        <div style={{ ...caps, fontSize: 15, letterSpacing: 4, color: "#A6B2D2", marginTop: 4 }}>
+          {`Reception at ${venues.reception.name}`}
+        </div>
       </div>
     </div>,
     {

@@ -28,7 +28,7 @@ const siteUrl =
 
 const { groom, bride } = wedding.couple;
 const title = `${groom} & ${bride} | ${wedding.date.short}`;
-const description = `You're invited to the wedding of ${groom} and ${bride} on ${wedding.date.long} at ${wedding.venue.name}, ${wedding.venue.town}.`;
+const description = `You're invited to the wedding of ${groom} and ${bride} on ${wedding.date.long} at ${wedding.venues.ceremony.name}, with the reception at ${wedding.venues.reception.name}, ${wedding.venues.reception.town}.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

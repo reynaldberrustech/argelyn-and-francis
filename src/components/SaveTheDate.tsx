@@ -70,7 +70,7 @@ function Countdown() {
 
 /** Save the Date: the date, the day, the time and place, and how long until then. */
 export function SaveTheDate({ lettering }: { lettering: Lettering }) {
-  const { date, venue } = wedding;
+  const { date, venues } = wedding;
   return (
     <section id="countdown" className="section page page--save" aria-labelledby="save-title">
       <h2 id="save-title" className="save__script">
@@ -91,7 +91,8 @@ export function SaveTheDate({ lettering }: { lettering: Lettering }) {
       <Reveal delay={0.2} className="save__details">
         <p className="script-title save__day">{date.weekday}</p>
         <p className="caps save__line">{date.timeWords}</p>
-        <p className="caps save__line">At {venue.name}</p>
+        <p className="caps save__line">At {venues.ceremony.name}</p>
+        <p className="save__after">Reception to follow at {venues.reception.name}</p>
       </Reveal>
 
       <Reveal delay={0.2} className="save__countdown">

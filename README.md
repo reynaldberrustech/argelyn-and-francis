@@ -1,21 +1,21 @@
 # Francis & Argelyn — wedding invitation
 
-A one-page wedding invitation for **Saturday, January 30, 2027** at **Malangas Budget Hotel**, Malangas, Zamboanga Sibugay. Midnight blue with champagne-gold calligraphy (Ephesis) and Cormorant Garamond, on fine navy linen: an embroidered lace envelope sealed in gold wax, gold line-drawn flowers that bloom as you scroll, and names that write themselves in by hand.
+A one-page wedding invitation for **Saturday, January 30, 2027**: the ceremony at **Malangas Catholic Church** at 1:00 PM, then the reception at **Malangas Budget Hotel**, Malangas, Zamboanga Sibugay. Midnight blue with champagne-gold calligraphy (Ephesis) and Cormorant Garamond, on fine navy linen: an embroidered lace envelope sealed in gold wax, gold line-drawn flowers that bloom as you scroll, and names that write themselves in by hand.
 
 Built with Next.js 16 (App Router), React 19, Tailwind CSS 4 and Motion. Ready to deploy on Vercel.
 
 ## What's on the page
 
-1. **Envelope**: navy lace with gold piping. Guests tap the gold wax seal, the four flaps fold open and petals drift down.
+1. **Envelope**: navy lace with gold piping. Guests tap the gold wax seal, the four flaps fold open, petals drift down and an invitation card rises out: your names written in by hand, the date, time and venue (and the guest's name, from a personal link). **View the invitation** on the card opens the rest of the site.
 2. **Monogram**: F, "and" and A written in by hand in gold, with flowers blooming from two corners.
 3. **You are cordially invited**: be our guest, with a garland of flowers.
 4. **Together with their families**: a photo framed with flowers, then the couple's names written in by hand.
-5. **Save the Date**: the date, time and place, a live countdown whose numbers roll as they change, and calendar buttons (Google, Apple and Outlook).
+5. **Save the Date**: the date, time, church and reception, a live countdown whose numbers roll as they change, and calendar buttons (Google, Apple and Outlook).
 6. **Our Moments**: an auto-playing photo slideshow. It moves on every 5 seconds, pauses on hover or when scrolled away, and can be swiped or paused.
-7. **Our Day**: the schedule.
-8. **The Venue**: map, directions, and a tap-to-explore plan of the hall.
+7. **Our Day**: the schedule, from arriving at the church to the last dance, with the place for each part.
+8. **The Venues**: the church and the hotel, each with directions, one map that switches between them, and a tap-to-explore plan of the reception hall.
 9. **Our Prenup**: a photo gallery. Tap a photo to see it full screen; swipe or use the arrow keys to move between them.
-10. **Attire**: the colors as paint swatches, and what the entourage, sponsors and guests can wear.
+10. **Attire**: a lookbook with photos of models in each look (bridesmaids, groomsmen, sponsors and guests), the color palette, and what guests can wear.
 11. **Entourage**: parents, sponsors, best man and maid of honor, groomsmen, bridesmaids and the little ones.
 12. **Details**: a note on gifts and common questions.
 13. **Kindly Reply**: a reply card that saves answers to a Google Sheet. Guests who are coming can also say who's coming with them and note any food allergies or diet needs.
@@ -50,10 +50,10 @@ Everything guests read is in **`src/content/wedding.ts`**. Before you share the 
 
 - [ ] Replace the placeholder names in `entourage` (for example "Ninong's name" and "Groomsman's name"). Add or remove lines to match your entourage.
 - [ ] Check the times in `schedule`, plus `startsAt` and `endsAt` (Philippine time, `+08:00`).
-- [ ] Set `venue.mapsQuery` to the hotel's exact coordinates. Google Maps has no listing named "Malangas Budget Hotel" (a search lands on a different hotel), so the map points at the town of Malangas for now. In Google Maps, right-click the building, click the coordinates to copy them, and paste them in as `"7.xxxxx,123.xxxxx"`.
+- [ ] Set `mapsQuery` for both places in `venues` to their exact coordinates. Google Maps finds neither the church (listed by the diocese as Santo Niño Parish) nor "Malangas Budget Hotel" by name, so both maps point at the town of Malangas for now. In Google Maps, right-click the building, click the coordinates to copy them, and paste them in as `"7.xxxxx,123.xxxxx"`.
 - [ ] Check `rsvp.deadline`, `hashtag`, `gifts` and `faqs`.
 
-The hall plan in the Venue section follows the moodboard layout: stage, aisle, family tables, guest tables, buffet, photo booth and entrance. Edit `src/components/HallPlan.tsx` if the real room is different.
+The reception hall plan in the Venues section follows the moodboard layout: stage, aisle, family tables, guest tables, buffet, photo booth and entrance. Edit `src/components/HallPlan.tsx` if the real room is different.
 
 ## Personal invitation links
 
@@ -245,15 +245,23 @@ For local testing, set `COUPLE_PASSWORD` in `.env.local` (it's never committed).
 3. Under **Settings → Environment Variables**, add `RSVP_WEBHOOK_URL`, `RSVP_WEBHOOK_SECRET` and `COUPLE_PASSWORD` (and `RSVP_SHEET_URL` if you like), then redeploy.
 4. Optional: if you use a custom domain, also set `NEXT_PUBLIC_SITE_URL=https://your-domain.com` so link previews use it.
 
-## Optional background music
+## Background music
 
-Put an mp3 in `public/audio/` and set `music` in `src/content/wedding.ts`:
+The site plays Pachelbel's *Canon in D* (recorded by the United States Air Force Band's Strolling Strings and released into the public domain, so it's free to use). It fades in gently, loops, and pauses while the guest is in another tab. A small button in the corner lets them pause it, and it stays paused.
+
+Phones and most browsers don't allow a page to play sound until the visitor taps something, so on most devices the music starts the moment the guest taps the wax seal. Where the browser allows it, it starts as soon as the page opens.
+
+To use your own song, put an mp3 in `public/audio/` and change `music` in `src/content/wedding.ts`:
 
 ```ts
 music: { src: "/audio/our-song.mp3", title: "Our song" },
 ```
 
-The song starts when the guest opens the envelope, and a small button lets them pause it.
+Keep it under about 5 MB (128 kbps is plenty) so it starts quickly on mobile data. Set `music: null` for no music.
+
+## Attire photos
+
+The lookbook photos in `public/attire/` were cut from your dress code design. To change a look, replace its photo (any portrait image on a plain light background works best) and update its `width`, `height`, `alt` and description under `attire` in `src/content/wedding.ts`. A higher-resolution version of the design would make the models sharper.
 
 ## Where things live
 
@@ -274,6 +282,10 @@ The song starts when the guest opens the envelope, and a small button lets them 
 | `src/lib/florals.ts` | Draws the gold line flowers in code |
 | `src/components/Carousel.tsx` | The auto-playing photo slideshow |
 | `public/moments/` | The slideshow photos |
+| `public/attire/` | The lookbook photos of each look |
+| `public/audio/` | The background music |
+| `src/components/Attire.tsx` | The dress code lookbook |
+| `src/components/Venue.tsx` | The church and reception cards, with `VenueMap.tsx` for the map |
 | `public/prenup/` | The prenup photos |
 | `public/textures/lace.webp` | The embroidered lace on the envelope |
 | `src/assets/fonts/` | Font files for the lettering and the preview image |

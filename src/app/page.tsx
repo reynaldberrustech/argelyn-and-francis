@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <InviteProvider>
       <div className="backdrop" aria-hidden="true" />
-      <EnvelopeGate />
+      <EnvelopeGate lettering={lettering} />
       <PetalShower />
       <ScrollProgress />
       <SiteNav />
