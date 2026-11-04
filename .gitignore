@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# example env file is safe to commit
+!.env.example
+
+# test RSVPs saved by npm run dev
+/.data/
