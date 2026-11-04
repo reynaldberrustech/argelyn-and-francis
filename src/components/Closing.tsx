@@ -30,9 +30,11 @@ export function Closing() {
         <p className="caps closing__meta">
           {wedding.date.long}
           <br />
-          {wedding.venue.name}
+          {wedding.venues.ceremony.name}
           <br />
-          {wedding.venue.town}
+          {wedding.venues.reception.name}
+          <br />
+          {wedding.venues.ceremony.town}
         </p>
         <CopyHashtag hashtag={wedding.hashtag} />
       </Reveal>

@@ -4,12 +4,13 @@ import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 
 export function Program() {
+  const { ceremony, reception } = wedding.venues;
   return (
     <section id="schedule" className="section" aria-labelledby="schedule-title">
       <SectionHeading
         id="schedule-title"
         title="Our Day"
-        intro={`Everything happens at ${wedding.venue.name}, from the vows to the last dance.`}
+        intro={`The ceremony is at ${ceremony.name} at ${ceremony.time}, and the celebration continues at ${reception.name}.`}
       />
       <ProgramSpine>
         <ol className="program">
@@ -20,6 +21,7 @@ export function Program() {
               </time>
               <span className="program__node" aria-hidden="true" />
               <div className="program__body">
+                <p className="program__place">{wedding.venues[item.place].name}</p>
                 <h3>{item.title}</h3>
                 <p>{item.detail}</p>
               </div>

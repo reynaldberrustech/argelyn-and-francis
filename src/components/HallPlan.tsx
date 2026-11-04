@@ -15,13 +15,13 @@ const AREAS: { id: AreaId; name: string; note: string }[] = [
     name: "Guest tables",
     note: "Find your name on the seating chart and your table number will be beside it.",
   },
-  { id: "aisle", name: "The aisle", note: "Please keep it clear during the processional." },
+  { id: "aisle", name: "The aisle", note: "Please keep it clear when the newlyweds make their entrance." },
   {
     id: "family",
     name: "Family tables",
     note: `${wedding.couple.groom}'s family sits on the left of the stage and ${wedding.couple.bride}'s on the right.`,
   },
-  { id: "stage", name: "Main stage", note: "Where we'll exchange our vows." },
+  { id: "stage", name: "Main stage", note: "Where the toasts, the program and our first dance take place." },
   { id: "buffet", name: "Buffet", note: "Dinner is served here once the reception begins." },
   { id: "booth", name: "Photo booth", note: "Grab your people and take a photo to remember the night." },
 ];
@@ -43,7 +43,7 @@ export function HallPlan() {
   return (
     <Reveal className="hall">
       <div className="hall__copy">
-        <h3 className="hall__title">Inside the hall</h3>
+        <h3 className="hall__title">Inside the reception hall</h3>
         <p className="hall__intro">Choose a spot to see where it is.</p>
         <ul className="hall__legend">
           {AREAS.map((area) => (
