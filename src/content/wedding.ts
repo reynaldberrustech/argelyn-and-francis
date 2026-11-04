@@ -561,8 +561,11 @@ export const wedding = {
 
   // Background music. It starts on its own where the browser allows, and otherwise the moment the guest
   // taps the seal. To use your own song, put an mp3 in /public/audio and change these, or set to null for none.
-  // Canon in D: United States Air Force Band (Strolling Strings), public domain.
-  music: { src: "/audio/canon-in-d.mp3", title: "Canon in D" } as null | { src: string; title: string },
+  // A piano cover of "You to Me Are Everything" (The Real Thing), compressed to 128 kbps.
+  music: { src: "/audio/you-to-me-are-everything.mp3", title: "You to Me Are Everything" } as null | {
+    src: string;
+    title: string;
+  },
 };
 
 export type Wedding = typeof wedding;

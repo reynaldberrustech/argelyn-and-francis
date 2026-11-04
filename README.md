@@ -249,7 +249,7 @@ For local testing, set `COUPLE_PASSWORD` in `.env.local` (it's never committed).
 
 ## Background music
 
-The site plays Pachelbel's *Canon in D* (recorded by the United States Air Force Band's Strolling Strings and released into the public domain, so it's free to use). It fades in gently, loops, and pauses while the guest is in another tab. A small button in the corner lets them pause it, and it stays paused.
+The site plays a piano cover of *You to Me Are Everything* by The Real Thing (`public/audio/you-to-me-are-everything.mp3`, compressed to 128 kbps so it loads quickly on phones). It fades in gently, loops, and pauses while the guest is in another tab. A small button in the corner lets them pause it, and it stays paused.
 
 Phones and most browsers don't allow a page to play sound until the visitor taps something, so on most devices the music starts the moment the guest taps the wax seal. Where the browser allows it, it starts as soon as the page opens.
 
